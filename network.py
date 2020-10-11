@@ -1,4 +1,5 @@
 import socket
+import pickle
 
 
 class Network():
@@ -8,15 +9,15 @@ class Network():
         self.host = "192.168.0.107"
         self.port = 5555
         self.addr = (self.host, self.port)
-        self.id = self.connect()
+        self.player_num = self.connect()
         self.format = "utf-8"
 
     def connect(self):
         self.client.connect(self.addr)
         return self.client.recv(2048).decode()
 
-    def getid(self):
-        return self.id
+    def get_player_num(self):
+        return self.player_num
 
     def send(self, data):
         """
