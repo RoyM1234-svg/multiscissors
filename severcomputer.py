@@ -17,7 +17,7 @@ try:
 except socket.error as e:
     print(str(e))
 
-s.listen()
+s.listen(2)
 print("Waiting for a connection")
 
 IdCount = 0
