@@ -2,6 +2,7 @@ import socket
 from _thread import *
 import sys
 from Game import Game
+import pickle
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -19,12 +20,22 @@ except socket.error as e:
 s.listen()
 print("Waiting for a connection")
 
-        
+IdCount = 0
+def threaded_client(conn,p,game):
+    conn.send(str.encode(str(p)))
+    # reply = ""
+    while True: 
+        data = conn.recv(2048).decode()
+        if data == "get":
+            conn.sendall(pickle.dumps(game))
+        elif data:
+            game.play(p,data)
+            conn.sendall(pickle.dumps(game))
+        elif data == "dosconnect":
+            break
+    print ("Connection Closed")
+    conn.close()
 
-IdCount = "0"
-def threaded_client(conn,p):
-    # global currentId
-    # conn.send(str.encode(currentId))
     # currentId = "1"
     # kind = ''
     # while True:
@@ -59,12 +70,12 @@ while True:
     print("Connected to: ", addr)
 
     p = 0
-    Idcount +=1
-    if Idcount == 1:
-        game = Game()
+    IdCount += 1
+    if IdCount == 1:
+        game= Game()
         print ("creating the game")
     else:
         game.ready = True
         p = 1
     
-    start_new_thread(threaded_client, (conn,p))
+    start_new_thread(threaded_client, (conn,p,game))
