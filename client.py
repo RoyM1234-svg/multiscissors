@@ -1,6 +1,11 @@
 from network import Network
 from Game import Game
+import threading
 
+
+def put_input(n):
+    move = input("choose your move: ")
+    g = n.send(move)
 def main():
     run = True
     connected = True
@@ -8,8 +13,8 @@ def main():
     p = int(n.getP())
     print ("you are player" ,p+1)
     while connected:
-        move = input("choose your move: ")
-        g = n.send(move)
+        t1 = threading.Thread(target = put_input,args=[n])
+        t1.join()
         while run:
             g = n.send("get")
             if g.bothWent():
@@ -23,6 +28,10 @@ def main():
                     print(f"{g.winner()+1} has won")
                 g.resetWent()
                 run = False
+            elif p == 0 and g.p2Went:
+                print("your opponent made his move, hurry up!")
+            elif p == 1 and g.p1Went:
+                print("your opponent made his move, hurry up!")        
         connected = False
     n.send("disconnect")
 
