@@ -21,6 +21,7 @@ s.listen(2)
 print("Waiting for a connection")
 
 IdCount = 0
+movelist = [None,None]
 def threaded_client(conn,p,game):
     conn.send(str.encode(str(p)))
     # reply = ""
@@ -30,6 +31,7 @@ def threaded_client(conn,p,game):
             conn.sendall(pickle.dumps(game))
         elif data:
             game.play(p,data)
+            movelist[p] = data
             conn.sendall(pickle.dumps(game))
         elif data == "dosconnect":
             break
