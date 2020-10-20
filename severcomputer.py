@@ -20,8 +20,9 @@ except socket.error as e:
 s.listen(2)
 print("Waiting for a connection")
 
+current_round = 1
 IdCount = 0
-# movelist = [None,None]
+movelist = [None,None]
 def threaded_client(conn,p,game):
     conn.send(str.encode(str(p)))
     # reply = ""
@@ -29,15 +30,16 @@ def threaded_client(conn,p,game):
         data = conn.recv(2048).decode()
         if data == "get":
             conn.sendall(pickle.dumps(game))
-        elif "get" in data:
-            data.replace("get","")
-            game.play(p,data)
+        elif data == "reset":
+            game.resetWent()
             conn.sendall(pickle.dumps(game))
         elif data:
             game.play(p,data)
             print(f"player{p+1} chose {data}")
-            # movelist[p] = data
+            movelist[p] = data
             conn.sendall(pickle.dumps(game))
+        
+        #     game.resetWent()
         # elif data == "dosconnect":
         #     break
     print ("Connection Closed")
