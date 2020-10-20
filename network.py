@@ -34,7 +34,4 @@ class Network:
         except socket.error as e:
             return str(e)
 
-# n = Network()
-# n.send(n.id + ":rock")
-# print(n.id)
 
