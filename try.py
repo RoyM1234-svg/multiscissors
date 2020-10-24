@@ -71,7 +71,13 @@ def draw_menu():
         message_to_screen(msg_player, BLUE, SMALLFONT, 300 * (i+1), 180)
         pygame.draw.rect(screen,WHITE,(300 * (i+1) - 50,200, 150, 150))
         pygame.draw.rect(screen,BLACK,(300 * (i+1) - 45,205, 140, 140))
-        pygame.display.update()    
+        pygame.display.update()
+
+# def draw _score():
+#     msg = "score = "
+#     message_to_screen(msg, WHITE,FONTMENU, 375,20)
+    
+
 
 def get_pick():
     for event in pygame.event.get():
