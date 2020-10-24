@@ -44,11 +44,11 @@ GREEN = (0, 255, 0)
 #             break    
 #         elif g.bothWent():
 #             break 
-def draw_board():
+def draw_board(score,p):
     draw_scissors()
     draw_rock()
     draw_paper()
-    draw_menu()
+    draw_menu(score,p)
     # sleep(5)
 
 def message_to_screen(msg, color, FONT, posx, posy):
@@ -75,14 +75,17 @@ def draw_paper():
     msg = "paper"
     message_to_screen(msg, RED,FONT, 625,510)
 
-def draw_menu():
+def draw_menu(score,p):
     msg = "first game"
     message_to_screen(msg, WHITE,FONTMENU, 375,20)
+    msg1 = f"you are player {p+1}"
+    message_to_screen(msg1, GREEN,FONT, 100,20)
+    print_score(score,p)
     for i in range(2):
         if i == 0:
-            message_to_screen("YOU", BLUE, SMALLFONT, 300 * (i+1), 180)
+            message_to_screen("YOU", BLUE, SMALLFONT, 300 * (i+1), 180) 
         else:
-            message_to_screen("OPPONENT", BLUE, SMALLFONT, 300 * (i+1), 180)
+            message_to_screen("OPPONENT", BLUE, SMALLFONT, 300 * (i+1)-25, 180)
         pygame.draw.rect(screen,WHITE,(300 * (i+1) - 50,200, 150, 150))
         pygame.draw.rect(screen,BLACK,(300 * (i+1) - 45,205, 140, 140))
         pygame.display.update()    
@@ -107,15 +110,53 @@ def get_pick():
                 pygame.display.update()
                 return "paper"
 
+def cleer_screen():
+    pygame.draw.rect(screen, BLACK, (0, 0, 900, 600))
+
+def print_oppmove(g,p):
+    if p == 0:
+        message_to_screen(g.moves[1], RED, FONT, 570, 220)
+    else:
+        message_to_screen(g.moves[0], RED, FONT, 570, 220)
+
+def print_won(g,p):
+    if g.winner() == -1:
+        message_to_screen("its a tie", RED,FONT, 375,90)
+    elif g.winner() == p:
+        message_to_screen("U WON", RED,FONT, 375,90)
+    else:
+        message_to_screen("U LOST", RED,FONT, 375,90)
+
+def print_score(score,p):
+    msg1 = f"score is = {score[0]} "
+    msg2 = f"score is = {score[1]} "
+    if p == 0:
+        message_to_screen(msg1, BLUE, SMALLFONT, 275, 370)
+        message_to_screen(msg2, BLUE, SMALLFONT, 575, 370)
+    else:
+        message_to_screen(msg2, BLUE, SMALLFONT, 275, 370)
+        message_to_screen(msg1, BLUE, SMALLFONT, 575, 370)
+
+def opponent_locked(g,p):
+    if p == 0 and g.p2Went: 
+        message_to_screen("locked in",RED, FONT, 570, 220)
+    elif p == 1 and g.p1Went:
+        message_to_screen("locked in",RED, FONT, 570, 220)  
+
+def clear_oppenentlocked():
+    pygame.draw.rect(screen,BLACK,(555,205, 140, 140))
+
+       
 def main():
     connected = True
     n = Network()
     p = int(n.getP())
-    draw_board()
-    print ("you are player" ,p+1)
     score =[0,0]
+    draw_board(score,p)
     count_rounds = 1
     while connected and 3 not in score:
+        g = n.send("get")
+        opponent_locked(g,p)
         run = True
         x = get_pick()
         if x:
@@ -123,34 +164,26 @@ def main():
             while run: 
                 g = n.send("get")
                 if g.bothWent():
-                    if p == 0:
-                        print(f"your opponent chose : {g.moves[1]}")
-                    else:
-                        print(f"your opponent chose : {g.moves[0]}")
-                    if g.winner() == -1:
-                        print("its a tie")
-                    elif g.winner() == p:
-                        print("U WON")
-                    else:
-                        print("U LOST")
-                    score[g.winner()] += 1
-                    print (f"your current score is {score[p]}")
+                    clear_oppenentlocked()
+                    print_oppmove(g,p)
+                    print_won(g,p)
+                    if g.winner() != -1:
+                        score[g.winner()] += 1
                     run = False 
-                    count_rounds +=1
-                    pygame.draw.rect(screen, BLACK, (0, 0, 900, 600))
-                    draw_board()
-            pygame.time.delay(500)  
+                    count_rounds +=1       
+            pygame.time.delay(4000)
+            cleer_screen()
+            draw_board(score,p)   
             n.send("reset")
     for i in range(len(score)):
         if score[i] == 3:
-            print (f"player {i+1} won the game")
-    # n.send("disconnect")
+            msgwin = f"PLAYER {i+1} WON THE GAME :)"
+            message_to_screen(msgwin, RED,FONT, 375,90)
+    pygame.time.delay(4000)
+    n.send("disconnect")
 
 
                 
         
-
-
-
 
 main()
