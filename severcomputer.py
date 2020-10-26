@@ -17,7 +17,7 @@ try:
 except socket.error as e:
     print(str(e))
 
-s.listen(2)
+s.listen(4)
 print("Waiting for a connection")
 
 current_round = 1
