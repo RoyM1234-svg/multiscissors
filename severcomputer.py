@@ -51,35 +51,6 @@ def threaded_client(conn,p,game):
     print ("Connection Closed")
     conn.close()
 
-    # currentId = "1"
-    # kind = ''
-    # while True:
-    #     try:
-    #         data = conn.recv(2048)
-    #         kind = data.decode('utf-8')
-    #         if not data:
-    #             conn.send(str.encode("Goodbye"))
-    #             break
-    #         else:
-    #             print("Recieved: " + kind)
-    #             arr = kind.split(":")
-    #             id = int(arr[0])
-    #             kinds_list.insert(id, arr[1])
-
-    #             if id == 0: nid = 1
-    #             if id == 1: nid = 0
-
-    #             print("player " + arr[0] + " chose" + arr[1])
-    #             # print(json.dumps(kinds_list))
-
-    #         reply = kinds_list[nid]    
-    #         conn.sendall(str.encode(reply))
-    #     except:
-    #         break
-
-    # print("Connection Closed")
-    # conn.close()
-
 while True:
     conn, addr = s.accept()
     print("Connected to: ", addr)
