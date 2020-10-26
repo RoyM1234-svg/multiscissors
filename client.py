@@ -162,7 +162,9 @@ def main():
         if x:
             n.send(x)
             while run: 
+                pygame.event.get()
                 g = n.send("get")
+                print("get")
                 if g.bothWent():
                     clear_oppenentlocked()
                     print_oppmove(g,p)
