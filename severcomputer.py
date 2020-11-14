@@ -6,7 +6,7 @@ import pickle
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-server = '192.168.0.107'
+server = '192.168.0.108'
 port = 5555
 
 server_ip = socket.gethostbyname(server)
@@ -17,7 +17,7 @@ try:
 except socket.error as e:
     print(str(e))
 
-s.listen(4)
+s.listen(2)
 print("Waiting for a connection")
 
 current_round = 1
