@@ -18,38 +18,17 @@ BLUE = (0, 0, 255)
 ORNAGE = (255, 127, 80)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
+Rock = pygame.image.load('rock.png')
+Paper = pygame.image.load('paper.png')
+Scissors = pygame.image.load('scissors.png')
 
 
-# class board:
-#     def __init__(self):
-#         py.gam
-
-#     def drawboard():
-#         pygame.draw.rect(screen,BLACK,(455,(i+1) * 100 + 5, 90, 40)) 
-
-
-# def put_input(n):
-#     global m
-#     move = input("choose your move: ")
-#     m = move
-
-# def get_information(n,p):
-#     while True:
-#         g = n.send("get")
-#         if p == 0 and g.p2Went and not g.p1Went: 
-#             print("\nyour opponent made his move, hurry up!")
-#             break
-#         elif p == 1 and g.p1Went and not g.p2Went: 
-#             print("\nyour opponent made his move, hurry up!")  
-#             break    
-#         elif g.bothWent():
-#             break 
 def draw_board(score,p):
     draw_scissors()
     draw_rock()
     draw_paper()
     draw_menu(score,p)
-    # sleep(5)
+
 
 def message_to_screen(msg, color, FONT, posx, posy):
     message = FONT.render(msg, True, color)
@@ -58,25 +37,28 @@ def message_to_screen(msg, color, FONT, posx, posy):
 
 
 def draw_scissors():
-    pygame.draw.rect(screen,WHITE,(400,500, 150, 40)) 
+    # pygame.draw.rect(screen,WHITE,(400,500, 150, 40)) 
+    screen.blit(Scissors,(420,450))
     pygame.display.update()
-    msg = "scissors"
-    message_to_screen(msg, RED,FONT, 420,510)
+    # msg = "scissors"
+    # message_to_screen(msg, RED,FONT, 420,510)
 
 def draw_rock():
-    pygame.draw.rect(screen,WHITE,(200,500, 150, 40)) 
+    # pygame.draw.rect(screen,WHITE,(200,500, 150, 40))
+    screen.blit(Rock,(235,450)) 
     pygame.display.update()
-    msg = "rock"
-    message_to_screen(msg, RED,FONT, 235,510)
+    # msg = "rock"
+    # message_to_screen(msg, RED,FONT, 235,510)
 
 def draw_paper():
-    pygame.draw.rect(screen,WHITE,(600,500, 150, 40)) 
+    # pygame.draw.rect(screen,WHITE,(600,500, 150, 40)) 
+    screen.blit(Paper,(610,450))
     pygame.display.update()
-    msg = "paper"
-    message_to_screen(msg, RED,FONT, 625,510)
+    # msg = "paper"
+    # message_to_screen(msg, RED,FONT, 625,510)
 
 def draw_menu(score,p):
-    msg = "first game"
+    msg = "RPC"
     message_to_screen(msg, WHITE,FONTMENU, 375,20)
     msg1 = f"you are player {p+1}"
     message_to_screen(msg1, GREEN,FONT, 100,20)
@@ -97,27 +79,37 @@ def get_pick():
         if event.type == pygame.MOUSEBUTTONDOWN:
             posx = event.pos[0]
             posy = event.pos[1]
-            if posx > 400 and posx < 550 and posy > 500 and posy< 545:
-                message_to_screen(" scissors", RED, FONT, 260, 220)
+            if posx > 420 and posx < 550 and posy > 450 and posy< 580:
+                screen.blit(Scissors,(260,210))
                 pygame.display.update()
                 return "scissors"
-            elif posx > 200 and posx < 350 and posy > 500 and posy< 545:
-                message_to_screen(" rock", RED, FONT, 260, 220)
+            elif posx > 235 and posx < 365 and posy > 450 and posy< 580:
+                screen.blit(Rock,(260,210))
                 pygame.display.update()
                 return "rock"
-            elif posx > 600 and posx < 750 and posy > 500 and posy< 545:
-                message_to_screen(" paper", RED, FONT, 260, 220)
+            elif posx > 610 and posx < 740 and posy > 450 and posy< 580:
+                screen.blit(Paper,(260,210))
                 pygame.display.update()
                 return "paper"
 
-def cleer_screen():
+def clear_screen():
     pygame.draw.rect(screen, BLACK, (0, 0, 900, 600))
 
 def print_oppmove(g,p):
     if p == 0:
-        message_to_screen(g.moves[1], RED, FONT, 570, 220)
+        if g.moves[1] == "scissors":
+            screen.blit(Scissors,(560,210))
+        elif g.moves[1] == "rock": 
+            screen.blit(Rock,(560,210))
+        else:
+            screen.blit(Paper,(560,210))
     else:
-        message_to_screen(g.moves[0], RED, FONT, 570, 220)
+        if g.moves[0] == "scissors":
+            screen.blit(Scissors,(560,210))
+        elif g.moves[0] == "rock": 
+            screen.blit(Rock,(560,210))
+        else:
+            screen.blit(Paper,(560,210))
 
 def print_won(g,p):
     if g.winner() == -1:
@@ -174,7 +166,7 @@ def main():
                     run = False 
                     count_rounds +=1       
             pygame.time.delay(4000)
-            cleer_screen()
+            clear_screen()
             draw_board(score,p)   
             n.send("reset")
     for i in range(len(score)):
